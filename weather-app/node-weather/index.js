@@ -10,6 +10,6 @@ request(url, function (err, response, body) {
   } else {
     let weather = JSON.parse(body)
     let message = weather.main.temp;
-    console.log(message.units=metric);
+    console.log(message);
   }
 });
