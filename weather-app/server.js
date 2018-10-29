@@ -4,6 +4,25 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const app = express()
 
+////MySQL Connection
+//var mysql = require('mysql');
+//var connect = mysql.createConnection({
+//    //properties...
+//    host: 'localhost',
+//    user: 'root',
+//    password: '',
+//    database: 'weatherDB'
+//});
+
+//connection.connect(function(error){
+//    if(!!error) {
+//        console.log('Error');
+//    } else {
+//        console.log('Mysql connection Established!')
+//    }
+//});
+
+
 const apiKey = 'e44c166edbf14fc31a59ead146573952';
 
 app.use(express.static('public'));
@@ -32,6 +51,16 @@ app.post('/', function (req, res) {
     }
   });
 })
+
+//app.get('/', function(req, resp){
+//    // about sql DB
+//    connection.query("SELECT * FROM weatherDB", function(error, rows, fields)
+//    if(!!error){
+//        console.log('Error in Query')
+//    }else {
+//        console.log('Successful Query!')
+//    }
+//}));
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
