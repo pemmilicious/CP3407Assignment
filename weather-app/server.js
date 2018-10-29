@@ -9,7 +9,8 @@ const mysql = require('mysql')
 const db = mysql.createConnection({
   host:'localhost',
   user: 'root',
-  password: ''
+  password: '',
+  database: 'weather'
 });
 
 //connect
@@ -30,7 +31,7 @@ app.get('/createdb', (req, res) => {
   });
 });
 
-
+const city = 'Townsville'
 const apiKey = 'e44c166edbf14fc31a59ead146573952';
 
 app.use(express.static('public'));
@@ -42,7 +43,7 @@ app.get('/', function (req, res, resp) {
 })
 
 app.post('/', function (req, res) {
-  let city = req.body.city;
+  // let city = req.body.city;
   let url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${apiKey}`
 
   request(url, function (err, response, body) {
@@ -61,8 +62,8 @@ app.post('/', function (req, res) {
 })
  
 //create the weather table
-app.get('createweathertable', (req, res) =>{
-  let sql = 'CREATE TABLE weather(id int AUTO_INCREMENT, Temp int, Humidity int, PRIMARY KEY (id))';
+app.get('/createweathertable', (req, res) =>{
+  let sql = 'CREATE TABLE weatherData(id int AUTO_INCREMENT, Temp int, Humidity int, PRIMARY KEY (id))';
   db.query(sql, (err, result) => {
     if(err) throw err;
     console.log(result);
@@ -72,14 +73,17 @@ app.get('createweathertable', (req, res) =>{
 
 //insert data into table
 app.get('/addData1', (req, res)=> {
-  let post = {Temp: weather.main.temp, Humidity: weather.main.humidity};
-  let sql = 'INSERT INTO weather SET ?';
-  let query = db.query(sql, post, (err, result) => {
-    if(err) throw err;
-    console.log(result);
-    res.send('weather data added');
+  let url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${apiKey}`
+  request(url, function (err, response, body) {
+    let weath = JSON.parse(body)
+    let post = {Temp: weath.main.temp, Humidity: weath.main.humidity};
+    let sql = 'INSERT INTO weatherData SET ?';
+    let query = db.query(sql, post, (err, result) => {
+      if(err) throw err;
+      console.log(result);
+      res.send('weather data added');
+    });
   });
-
 });
 
 app.listen(3000, function () {
