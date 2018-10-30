@@ -5,6 +5,15 @@ const request = require('request');
 const app = express()
 const mysql = require('mysql')
 
+const city = 'Townsville'
+const apiKey = 'e44c166edbf14fc31a59ead146573952';
+
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set('view engine', 'ejs')
+
+
+
 //MySQL Connection
 const db = mysql.createConnection({
   host:'localhost',
@@ -31,15 +40,19 @@ app.get('/createdb', (req, res) => {
   });
 });
 
-const city = 'Townsville'
-const apiKey = 'e44c166edbf14fc31a59ead146573952';
-
-app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.set('view engine', 'ejs')
 
 app.get('/', function (req, res, resp) {
-    res.render('index', {weather: null, error: null});
+      res.render('index', {weather: null, error: null});
+      let url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${apiKey}`
+      request(url, function (err, response, body) {
+        let weath = JSON.parse(body)
+        let post = {Temp: ((weath.main.temp - 32) * 5/9), Humidity: weath.main.humidity, tempmin : ((weath.main.temp_min - 32) * 5/9), tempmax : ((weath.main.temp_max - 32) * 5/9), pressure : weath.main.pressure, sunset : weath.sys.sunrise, sunrise : weath.sys.sunset, windspeed : weath.wind.speed, winddeg : weath.wind.deg};
+        let sql = 'INSERT INTO weatherinfo SET ?';
+        let query = db.query(sql, post, (err, result) => {
+          if(err) throw err;
+          console.log(result);
+        });
+      });
 })
 
 app.post('/', function (req, res) {
@@ -63,7 +76,7 @@ app.post('/', function (req, res) {
  
 //create the weather table
 app.get('/createweathertable', (req, res) =>{
-  let sql = 'CREATE TABLE weatherData(id int AUTO_INCREMENT, Temp int, Humidity int, PRIMARY KEY (id))';
+  let sql = 'CREATE TABLE weatherinfo(id int AUTO_INCREMENT, PRIMARY KEY (id), Temp int, Humidity int, tempmin int, tempmax int, pressure int, sunset int, sunrise int, windspeed int, winddeg int)';
   db.query(sql, (err, result) => {
     if(err) throw err;
     console.log(result);
@@ -76,8 +89,8 @@ app.get('/addData1', (req, res)=> {
   let url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${apiKey}`
   request(url, function (err, response, body) {
     let weath = JSON.parse(body)
-    let post = {Temp: weath.main.temp, Humidity: weath.main.humidity};
-    let sql = 'INSERT INTO weatherData SET ?';
+    let post = {Temp: weath.main.temp, Humidity: weath.main.humidity, tempmin : weath.main.temp_min, tempmax : weath.main.temp_max, pressure : weath.main.pressure, sunset : weath.sys.sunrise, sunrise : weath.sys.sunset, windspeed : weath.wind.speed, winddeg : weath.wind.deg};
+    let sql = 'INSERT INTO weatherinfo SET ?';
     let query = db.query(sql, post, (err, result) => {
       if(err) throw err;
       console.log(result);
