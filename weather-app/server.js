@@ -1,4 +1,7 @@
 
+//http://api.openweathermap.org/data/2.5/weather?q=Townsville&units=imperial&appid=e44c166edbf14fc31a59ead146573952
+
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
@@ -51,6 +54,7 @@ app.get('/', function (req, res, resp) {
         let query = db.query(sql, post, (err, result) => {
           if(err) throw err;
           console.log(result);
+          
         });
       });
 })
@@ -67,8 +71,19 @@ app.post('/', function (req, res) {
       if(weather.main == undefined){
         res.render('index', {weather: null, error: 'Error, please try again'});
       } else {
+        let tempWeather = {Temp: ((weather.main.temp - 32) * 5/9),
+          Humidity: weather.main.humidity,
+          tempmin : ((weather.main.temp_min - 32) * 5/9),
+          tempmax : ((weather.main.temp_max - 32) * 5/9),
+          pressure : weather.main.pressure,
+          sunset : weather.sys.sunrise,
+          sunrise : weather.sys.sunset,
+          windspeed : weather.wind.speed,
+          winddeg : weather.wind.deg};
+        let temp = weather.main.temp;
         let tempText = `It's ${weather.main.temp} degrees in ${weather.name}!`;
         res.render('index', {weather: tempText, error: null});
+        // res.render('index', {currWeather : tempWeather, error: null});
       }
     }
   });

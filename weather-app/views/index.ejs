@@ -1,6 +1,6 @@
 <script>
-var mysql = require('mysql');
-let currWeather = {};
+const mysql = require('mysql')
+// var currWeather = {};
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -8,15 +8,25 @@ var con = mysql.createConnection({
   database: "weather"
 });
 
-con.connect(function(err) {
+con.connect(function(err,) {
   if (err) throw err;
   con.query("SELECT row FROM table WHERE id=(SELECT max(id) FROM table)", function (err, result, fields) {
     if (err) throw err;
     console.log(result);
     currWeather = result;
     console.log(currWeather);
+    return currWeather;
   });
 });
+function getWeatherData(sql, req, res){
+  con.query(sql, (err, result) => {
+    if(err) throw err;
+    console.log(result);
+
+});
+return result;
+}
+
 </script>
 
 
@@ -26,51 +36,96 @@ con.connect(function(err) {
     <meta charset="utf-8">
     <title>Weather</title>  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+        
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+	  <!-- fontawesome -->
+	  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	  <!-- weather icons -->
+	  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css">
+	  <!-- stylesheet -->
+	  <link rel="stylesheet" type="text/css" href="./css/style.css">
+    
     <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
-    <div class="container">
-      <fieldset>
-        <form action="/" method="post">
-          <input name="city" type="text" class="ghost-input" placeholder="Enter a City" required>
-          <input type="submit" class="ghost-button" value="Get Weather">
-        </form>
-        <% if(weather !== null){ %>
-          <p><%= weather %></p>
-        <% } %>
-
-        <% if(error !== null){ %>
-          <p><%= error %></p>
-        <% } %>
-      </fieldset>
-    </div>
-    <p><%= currWeather %></p>
+    	<div class="hero">
+          <!-- navbar -->
+          <!-- <nav class="navbar">
+            <a class="navbar-brand" href="#">
+              <i class="fa fa-sun-o" aria-hidden="true"></i>
+              <strong>Local</strong>Weather
+            </a>
+            <span id="date" class="lead">11:00AM | Mar 3, 2018</span>
+          </nav> -->
+          <!-- weather section  -->
+          <div class="container">
+            <div class="row">
+              <div id="" class="col-8 mx-auto weather">
+                <!-- weather header section -->
+                <div class="weather-head">
+                  <h1 id="location" class="text-center display-4">Townsville, AU</h1>
+                  <div class="row">							
+                    <div id="description" class="description col-6 text-center">
+                      <i id="icon-desc" class="wi wi-owm-611"></i>
+                      <p class="desc">partly cloudy</p>			
+                    </div>
+                    <div id="temperature" class="col-6 text-center">
+                        26 <i id="icon-thermometer" class="wi wi-thermometer"></i>					
+                    </div>	
+                  </div>
+                  <!-- weather body header -->
+                  <div class="weather-body">					
+                    <div class="row">
+                      <div class="humidity col-4 text-center">
+                        <i class="wi wi-raindrop"></i><span> Humidity</span>
+                      </div>
+                      <div class="wind col-4 text-center">
+                        <i class="wi wi-strong-wind"></i><span> Wind Speed</span>
+                      </div>
+                      <div class="visibility col-4 text-center">
+                        <i class="fa fa-eye"></i><span> Visibility</span>
+                      </div>				
+                    </div>
+                    <!-- weather body data -->
+                    <div class="row">
+                      <div id="humidity" class="humidity-data col-4 text-center">
+                          74%
+                      </div>
+                      <div id="wind" class="wind-data col-4 text-center">
+                          9mph
+                      </div>
+                      <div id="visibility" class="degree-data col-4 text-center">
+                          50
+                      </div>
+                    </div>
+                  </div>						
+                </div>					
+              </div>
+            </div>
+          </div>
+          
+        </div>
+    
       <div id="temp" style="width : 400px">
       <canvas id="tempChart" width="400px" height="400px"></canvas>
       <script>
-        var ctx = document.getElementById("tempChart");
+        var ctx = document.getElementById("tempChart").getContext("2d");
         var myChart = new Chart(ctx, {
-            type: 'polarArea',
+            type: 'bar',
             data: {
-                labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                labels: ["Temp Min", "Temp", "Temp Max"],
                 datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
+                    label: 'Townsville Temperature',
+                    data: [24, 26, 31],
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
+                        'yellow',
+                        'orange',
+                        'red'
                     ],
                     borderColor: [
                         'rgba(255,99,132,1)',
                         'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
+                        'rgba(255, 206, 86, 1)'
                     ],
                     borderWidth: 1
                 }]
