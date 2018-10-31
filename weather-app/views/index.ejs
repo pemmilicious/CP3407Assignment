@@ -34,7 +34,6 @@ return result;
 <html>
   <head>
     <meta charset="utf-8">
-<<<<<<< HEAD
     <title>Weather</title>  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
         
@@ -122,73 +121,7 @@ return result;
                         'yellow',
                         'orange',
                         'red'
-=======
-    <title>Test</title>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js" type="text/javascript"></script>
-  </head>
-  <body>
-    <div class="container">
-      <fieldset>
-        <form action="/" method="post">
-          <input name="city" type="text" class="ghost-input" placeholder="Enter a City" required>
-          <input type="submit" class="ghost-button" value="Get Weather">
-        </form>
-        <% if(weather !== null){ %>
-          <p><%= weather %></p>
-        <% } %>
-
-        <% if(error !== null){ %>
-          <p><%= error %></p>
-        <% } %>
-      </fieldset>
-      <canvas id="tempChart" width="400" height="400"></canvas>
-      <script>
-        var ctx = document.getElementById("tempChart");
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
->>>>>>> 6e04a1ae72b3ca6c22d0a9d448e2e2cb7fdc541a
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-<<<<<<< HEAD
-                        'rgba(255, 206, 86, 1)'
-=======
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
->>>>>>> 6e04a1ae72b3ca6c22d0a9d448e2e2cb7fdc541a
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero:true
-                        }
-                    }]
-                }
-            }
-        });
-        </script>
-    </div>
-          
-      
+  
 
   </body>
 </html>

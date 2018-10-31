@@ -54,10 +54,6 @@ app.get('/', function (req, res, resp) {
         let query = db.query(sql, post, (err, result) => {
           if(err) throw err;
           console.log(result);
-<<<<<<< HEAD
-          
-=======
->>>>>>> 6e04a1ae72b3ca6c22d0a9d448e2e2cb7fdc541a
         });
       });
 })
